@@ -48,6 +48,18 @@ app.post('/api/genres', (req, res) => {
     res.send(genre);
 })
 
+app.delete('/api/genres/:id', (req, res) => {
+    let genre = genres.find( genre => genre.id === parseInt(req.params.id));
+    
+    if(!genre) {
+        return res.status(404).send("Could not find genre with that id");
+    }
+
+    let index = genres.indexOf(genre);
+    genres.splice(index, 1);
+    res.send(genre);
+})
+
 
 function validateGenre(genre) {
     const schema = {
