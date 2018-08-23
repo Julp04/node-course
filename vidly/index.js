@@ -34,6 +34,26 @@ app.get('/api/genres/:id', (req, res) => {
     }
 })
 
+app.put('/api/genres/:id', (req, res) => {
+    const genre = genres.find( c => c.id === parseInt(req.params.id));
+    if(!genre) {
+        return res.status(404).send('The course with the given id was not found');
+    }
+
+    // Validate 
+    // If invalid return 400 = Bad request
+    const {error} = validateGenre(req.body);
+    if(error) {
+        return res.status(400).send(error.details[0].message);      
+    }
+
+    // Update course
+    // Return the updated genre
+
+    genre.name = req.body.name;
+    res.send(genre);
+})
+
 app.post('/api/genres', (req, res) => {
     let {error} = validateGenre(req.body);
     if (error) {
