@@ -1,8 +1,17 @@
+const helmet = require('helmet');
+const morgan = require('morgan');
 const Joi = require('joi');
 const express = require('express');
 const app = express();
+const logger = require('./logger');
 
 app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+app.use(express.static('public'));
+
+app.use(logger);
+app.use(helmet());
+app.use(morgan('tiny'));
 
 const courses = [
     {id: 1, name: 'course1'},
