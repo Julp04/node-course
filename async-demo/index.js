@@ -1,9 +1,9 @@
 console.log('Before');
-getUser(1, (user) => {
-    getRepos(user.gitHubUsername, (repos) => {
-        console.log(repos);
-    })
-});
+getUser(1)
+    .then(user => getRepos(user.gitHubUsername))
+    .then(repos => getCommits(repos[0]))
+    .then(commits => console.log(commits))
+    .catch(error => console.log(error.message));
 console.log('After');
 
 // Callbacks 
@@ -11,15 +11,28 @@ console.log('After');
 // Async/await
 
 
-function getUser(id, callBack) {
-    setTimeout(() => {
-        console.log('Reading a user from a database...');
-        callBack({id: id, gitHubUsername: 'julp04'});
-    }, 2000)
+function getUser(id) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            console.log('Reading a user from a database...');
+            resolve({id: id, gitHubUsername: 'julp04'});
+        }, 2000)
+    })
 }
 
-function getRepos(username, callBack) {
+function getRepos(username) {
+   return new Promise((resolve, reject) => {
     setTimeout(() => {
-        callBack(['repo1', 'repo2', 'repo3']);
+        console.log('Connecting to github api');
+        resolve(['repo1', 'repo2', 'repo3']);
     }, 2000);
+   })
+}
+
+function getCommits(repo) {
+    return new Promise((resolve, reject) => {
+        setTimeout( () => {
+            resolve(['commit0'])
+        }, 2000);
+    })
 }
