@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/playground')
+mongoose.connect('mongodb://localhost/mongo-exercises')
     .then(() => console.log('Connected to MongoDB...'))
     .catch(error => console.error('Could not connect to MongoDB...', error));
 
@@ -12,10 +12,12 @@ const courseSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    isPublished: Boolean
+    isPublished: Boolean,
+    price: Number
 });
 
 const Course = mongoose.model('Course', courseSchema);
+exports.Course = Course;
 
 async function createCourse() {
     const course = new Course({
@@ -132,8 +134,6 @@ async function paging() {
     const pageNumber = 2;
     const pageSize = 10;
     // /api/courses?pageNumber=2&pageSize=10
-
-
     const courses = await Course
         .find({ author: 'Julian', isPublished: true})
         .skip((pageNumber - 1) * pageSize)
