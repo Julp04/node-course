@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/mongo-exercises')
+mongoose.connect('mongodb://localhost/playground')
     .then(() => console.log('Connected to MongoDB...'))
     .catch(error => console.error('Could not connect to MongoDB...', error));
 
 const courseSchema = new mongoose.Schema({
-    name: String,
+    name: { type: String, required: true},
     author: String,
     tags: [String],
     date: {
@@ -21,14 +21,20 @@ exports.Course = Course;
 
 async function createCourse() {
     const course = new Course({
-        name: 'Angular Course',
+        // name: 'Angular Course',
         author: "Julian",
         tags: ['angular', 'frontend'],
-        isPublished: true
+        isPublished: true,
+        price: 15
     })
 
-    const result = await course.save();
-    console.log(result);
+    try {
+        const result = await course.save();
+        console.log(result);
+    }catch(ex) {
+        console.log(ex.message);
+    }
+  
 }
 
 async function getCourses() {
@@ -144,8 +150,55 @@ async function paging() {
     console.log(courses);
 }
 
+// Updating a course
 
-count();
+async function updateCourse(id) {
+    // Query first
+    // findById
+    // Modify its properties
+    // save()
+
+    const course = await Course.findById(id);
+    if(!course) {
+        console.log('Could not find course');
+        return;
+    }
+    course.isPublished = true;
+    course.author = 'Another author';
+    
+    // course.set({
+    //     isPublished: true,
+    //     author: 'Another author'
+    // })
+    const result = await course.save();
+    console.log(result);
+}
+
+async function updateCourse2(id) {
+    // Update first
+    // Update directly
+    // Optionally: get the updated document
+
+    const result = await Course.findByIdAndUpdate(id, {
+        $set: {
+            author: 'Julian',
+            isPublished: false
+        }
+    }, {new: true});
+    console.log(result);
+}
+
+// Removing a course
+
+async function removeCourse(id) {
+    // const result = await Course.deleteOne({_id: id});
+    const course = await Course.findByIdAndRemove(id);
+    console.log(course);
+}
+
+
+
+createCourse();
 
 
 
