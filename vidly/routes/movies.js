@@ -1,8 +1,7 @@
-const express = require('express');
+const express = require('express')
 const router = express.Router();
 const {Movie, validate} = require('../models/movie');
 const {Genre} = require('../models/genre');
-
 
 //Route = "api/genres"
 
